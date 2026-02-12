@@ -25,4 +25,4 @@ I am open to discussion regarding research opportunities, thesis proposals, or a
 
 * **Name:** Florent Cheyron
 * **Email:** florent.cheyron@etudiant.univ-rennes2.fr - florent.cheyron@irisa.fr
-* **LinkedIn:** [Link][https://www.linkedin.com/in/florent-cheyron-1958a032b/]
+* **LinkedIn:** [Link](https://www.linkedin.com/in/florent-cheyron-1958a032b/)
