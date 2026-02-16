@@ -13,6 +13,12 @@ I am currently focusing on:
 * **Generalization:** Exploring methods to prevent overfitting to specific level layouts, allowing agents to adapt to unseen dynamic environments.
 * **Simulated Environments:** Using video games and physics engines as rigorous proxies for real-world decision-making problems.
 
+## Current Project: Predator-Prey Environment
+
+A minimal 1v1 adversarial environment where a predator learns to catch prey using PPO. Implements reward shaping to study emergent pursuit and evasion behaviors. Built with Gymnasium and Stable-Baselines3 for clean experimentation with multi-agent dynamics.
+
+**[View Project](prey_predator_project/)**
+
 ## Literature Review
 
 To ground my work in theory, I maintain an annotated bibliography of foundational and state-of-the-art papers. This includes works on DQN, PPO, Multi-Agent Autocurricula, and Generalization.
