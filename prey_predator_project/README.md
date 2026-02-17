@@ -65,8 +65,14 @@ python evaluate.py --predator models/predator_final.zip --prey models/prey_final
 
 ## Results
 
+| Random vs Random | Trained Predator | Trained Prey | Both Trained |
+|:---:|:---:|:---:|:---:|
+| ![](gifs/random_random.gif) | ![](gifs/predator_trained.gif) | ![](gifs/prey_trained.gif) | ![](gifs/both_trained.gif) |
+| Baseline | Predator learns pursuit | Prey learns evasion | Full adversarial |
+
 With 100k timesteps:
-- ...
+- Catch rate: ~25%
+- Episode length: ~90.4 steps
 
 ## Future Directions
 
