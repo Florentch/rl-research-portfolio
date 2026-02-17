@@ -30,5 +30,5 @@ To ground my work in theory, I maintain an annotated bibliography of foundationa
 I am open to discussion regarding research opportunities, thesis proposals, or academic collaboration.
 
 * **Name:** Florent Cheyron
-* **Email:** florent.cheyron@etudiant.univ-rennes2.fr - florent.cheyron@irisa.fr
+* **Email:** florent.cheyron@etudiant.univ-rennes2.fr - florent.cheyron@inria.fr
 * **LinkedIn:** [Link](https://www.linkedin.com/in/florent-cheyron-1958a032b/)
