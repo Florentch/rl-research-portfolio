@@ -9,9 +9,9 @@ Multi-agent reinforcement learning environment using PPO. Study emergent behavio
 ### Environment
 
 - **Grid:** 20x20
-- **Agents:** 1 predator (red triangle) + 1 prey (green circle)
+- **Agents:** 1 predator (red losange) + 1 prey (green circle)
 - **Episode:** 100 steps max
-- **Observations:** Positions and distances (8 dimensions)
+- **Observations:** Own position, opponent position, distance and direction (7 values)
 - **Actions:** Stay, Up, Down, Left, Right
 
 ### Rewards
@@ -80,4 +80,3 @@ With 100k timesteps:
 - Obstacles and walls
 - Partial observability (vision cones)
 - Different prey strategies
-- Curriculum learning
