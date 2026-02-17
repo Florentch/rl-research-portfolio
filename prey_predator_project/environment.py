@@ -8,6 +8,17 @@ import os
 from config import *
 
 
+BG_COLOR     = (30, 30, 40)
+GRID_COLOR   = (45, 45, 58)
+PRED_COLOR   = (220, 80, 80)
+PRED_BORDER  = (160, 40, 40)
+PREY_COLOR   = (80, 200, 140)
+PREY_BORDER  = (40, 150, 90)
+CAUGHT_COLOR = (100, 100, 110)
+TEXT_COLOR   = (180, 180, 200)
+STATUS_H     = 28
+
+
 class PredatorPreyEnv(gym.Env):
     metadata = {"render_modes": ["rgb_array"], "render_fps": RENDER_FPS}
     
@@ -21,8 +32,6 @@ class PredatorPreyEnv(gym.Env):
         self.step_count = 0
         self.prey_caught = False
         self.window = None
-        self.predator_sprite = None
-        self.prey_sprite = None
         
     def _is_valid_position(self, pos):
         x, y = pos
@@ -83,14 +92,15 @@ class PredatorPreyEnv(gym.Env):
         
         return self._get_observations(), rewards, terminated, truncated, {"step": self.step_count, "caught": self.prey_caught}
     
-    def _create_sprite(self, color, shape):
-        sprite = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-        if shape == "predator":
-            points = [(CELL_SIZE*0.2, CELL_SIZE*0.2), (CELL_SIZE*0.8, CELL_SIZE*0.5), (CELL_SIZE*0.2, CELL_SIZE*0.8)]
-            pygame.draw.polygon(sprite, color, points)
-        else:
-            pygame.draw.circle(sprite, color, (CELL_SIZE//2, CELL_SIZE//2), int(CELL_SIZE*0.35))
-        return sprite
+    def _draw_agent(self, cx, cy, r, color, border):
+        pygame.draw.circle(self.window, border, (cx, cy), r)
+        pygame.draw.circle(self.window, color, (cx, cy), r - 3)
+    
+    def _draw_predator(self, cx, cy, r):
+        outer = [(cx, cy - r), (cx + r, cy), (cx, cy + r), (cx - r, cy)]
+        inner = [(cx, cy - r + 4), (cx + r - 4, cy), (cx, cy + r - 4), (cx - r + 4, cy)]
+        pygame.draw.polygon(self.window, PRED_BORDER, outer)
+        pygame.draw.polygon(self.window, PRED_COLOR, inner)
     
     def render(self):
         if self.render_mode is None:
@@ -99,28 +109,34 @@ class PredatorPreyEnv(gym.Env):
         if self.window is None:
             os.environ['SDL_VIDEODRIVER'] = 'dummy'
             pygame.init()
-            self.window = pygame.Surface((GRID_SIZE*CELL_SIZE, GRID_SIZE*CELL_SIZE))
-            self.predator_sprite = self._create_sprite(COLOR_PREDATOR, "predator")
-            self.prey_sprite = self._create_sprite(COLOR_PREY, "prey")
+            self.window = pygame.Surface((GRID_SIZE * CELL_SIZE, GRID_SIZE * CELL_SIZE + STATUS_H))
         
-        self.window.fill((255, 255, 255))
+        self.window.fill(BG_COLOR)
         
+        # Status bar
+        font = pygame.font.Font(None, 22)
+        label = f"Step {self.step_count}/{MAX_STEPS}   {'CAUGHT' if self.prey_caught else 'Alive'}"
+        self.window.blit(font.render(label, True, TEXT_COLOR), (10, 6))
+        
+        # Grid
         for i in range(GRID_SIZE + 1):
-            pygame.draw.line(self.window, COLOR_GRID, (i*CELL_SIZE, 0), (i*CELL_SIZE, GRID_SIZE*CELL_SIZE))
-            pygame.draw.line(self.window, COLOR_GRID, (0, i*CELL_SIZE), (GRID_SIZE*CELL_SIZE, i*CELL_SIZE))
+            pygame.draw.line(self.window, GRID_COLOR, (i*CELL_SIZE, STATUS_H), (i*CELL_SIZE, GRID_SIZE*CELL_SIZE + STATUS_H))
+            pygame.draw.line(self.window, GRID_COLOR, (0, i*CELL_SIZE + STATUS_H), (GRID_SIZE*CELL_SIZE, i*CELL_SIZE + STATUS_H))
         
-        prey_pos = self.positions[1]
-        prey_rect = self.prey_sprite.get_rect(center=(int((prey_pos[0]+0.5)*CELL_SIZE), int((prey_pos[1]+0.5)*CELL_SIZE)))
-        sprite = self._create_sprite(COLOR_CAUGHT if self.prey_caught else COLOR_PREY, "prey")
-        self.window.blit(sprite, prey_rect)
+        r = int(CELL_SIZE * 0.38)
         
-        pred_pos = self.positions[0]
-        pred_rect = self.predator_sprite.get_rect(center=(int((pred_pos[0]+0.5)*CELL_SIZE), int((pred_pos[1]+0.5)*CELL_SIZE)))
-        self.window.blit(self.predator_sprite, pred_rect)
+        def center(pos):
+            return int((pos[0] + 0.5) * CELL_SIZE), int((pos[1] + 0.5) * CELL_SIZE) + STATUS_H
         
-        font = pygame.font.Font(None, 24)
-        text = font.render(f"Step: {self.step_count}/{MAX_STEPS} | Caught: {self.prey_caught}", True, (0,0,0))
-        self.window.blit(text, (10, 10))
+        # Prey first, predator on top
+        px, py = center(self.positions[1])
+        if self.prey_caught:
+            self._draw_agent(px, py, r, CAUGHT_COLOR, (70, 70, 80))
+        else:
+            self._draw_agent(px, py, r, PREY_COLOR, PREY_BORDER)
+        
+        dx, dy = center(self.positions[0])
+        self._draw_predator(dx, dy, r)
         
         return np.transpose(np.array(pygame.surfarray.pixels3d(self.window)), axes=(1, 0, 2))
     
