@@ -23,7 +23,7 @@ A minimal 1v1 adversarial environment where a predator learns to catch prey usin
 
 To ground my work in theory, I maintain an annotated bibliography of foundational and state-of-the-art papers. This includes works on DQN, PPO, Multi-Agent Autocurricula, and Generalization.
 
-📄 **[Click here to view my Annotated Bibliography](literature/bibliography.md)**
+**[View Annotated Bibliography](literature/bibliography.md)**
 
 ## Contact
 
